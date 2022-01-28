@@ -24,8 +24,8 @@ spec:
   # Use service account that can deploy to all namespaces
   # serviceAccountName: cd-jenkins
   containers:
-  - name: alpine
-    image: alpine:3.15.0
+  - name: python
+    image: mhart/alpine-node
     command:
     - cat
     tty: true
@@ -45,7 +45,7 @@ spec:
   stages {
     stage('build') {
       steps {
-        container('alpine:3.15.0') {
+        container('python') {
           sh """
             ln -s `pwd` 
           """
@@ -54,8 +54,7 @@ spec:
     }
     stage('Build and push image with Container Builder') {
       steps {
-        container('alpine:3.15.0') {
-                
+        container('gcloud') {
           sh "PYTHONUNBUFFERED=1 gcloud builds submit -t ${IMAGE_TAG} ."
         }
       }
@@ -64,9 +63,7 @@ spec:
       steps {
         container('kubectl') {
           sh "gcloud container clusters get-credentials iphone --zone us-central1-c --project my-project-600-339318"
-          sh "kubectl --help"
-          
-         
+          sh "kubectl --help"         
         }
       }
     }
