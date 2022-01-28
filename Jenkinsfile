@@ -2,7 +2,7 @@ pipeline {
 
   environment {
     PROJECT = "my-project-600-339318"
-    APP_NAME = "emailservice"
+    APP_NAME = "currencyservice"
     FE_SVC_NAME = "${APP_NAME}-frontend"
     CLUSTER = "iphone"
     CLUSTER_ZONE = "us-central1-c"
@@ -54,7 +54,8 @@ spec:
     }
     stage('Build and push image with Container Builder') {
       steps {
-        container('gcloud') {
+        container('alpine:3.15.0') {
+                
           sh "PYTHONUNBUFFERED=1 gcloud builds submit -t ${IMAGE_TAG} ."
         }
       }
